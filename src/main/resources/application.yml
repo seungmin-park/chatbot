@@ -1,0 +1,33 @@
+
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.01:3306/chatbot?serverTimezone=UTC&characterEncoding=UTF-8
+    username: inhatc
+    password: inhatc
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+server:
+  port: 8080
