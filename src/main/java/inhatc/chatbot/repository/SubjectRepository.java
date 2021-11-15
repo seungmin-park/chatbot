@@ -25,13 +25,14 @@ public class SubjectRepository {
     }
 
     public Subject findByName(String name) {
-        //select * from subject where sub_title = title;
+        //select * from subject where sub_name = name;
         return em.createQuery("select s from Subject s where s.subName =: name", Subject.class)
                 .setParameter("name", name)
                 .getSingleResult();
     }
 
     public Long deleteByName(String name) {
+        //delete from subject where sub_name = name;
         Long removeItemId = findByName(name).getId();
         em.remove(findByName(name));
         return removeItemId;

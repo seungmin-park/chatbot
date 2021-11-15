@@ -2,6 +2,7 @@ package inhatc.chatbot.controller;
 
 import inhatc.chatbot.domain.Subject;
 import inhatc.chatbot.domain.SubjectDto;
+import inhatc.chatbot.repository.SubjectRepository;
 import inhatc.chatbot.service.SubjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,8 +22,16 @@ public class SubjectController {
 
     @PostConstruct
     public void add() {
-        subjectService.join(new Subject("윤경섭", "시스템분석설계", "11주차과제", LocalDateTime.of(2021, 11, 8, 0, 0), LocalDateTime.of(2021, 11, 22, 23, 59)));
-        subjectService.join(new Subject("김태간", "오픈소스프로그래밍", "11주차과제", LocalDateTime.of(2021, 11, 8, 0, 0), LocalDateTime.of(2021, 11, 14, 23, 59)));
+        subjectService.join(
+                new Subject("윤경섭", "시스템분석설계", "11주차과제",
+                        LocalDateTime.of(2021, 11, 8, 0, 0),
+                        LocalDateTime.of(2021, 11, 22, 23, 59))
+        );
+        subjectService.join(
+                new Subject("김태간", "오픈소스프로그래밍", "11주차과제",
+                LocalDateTime.of(2021, 11, 8, 0, 0),
+                LocalDateTime.of(2021, 11, 14, 23, 59))
+        );
     }
 
     @GetMapping("/list")
@@ -33,14 +42,18 @@ public class SubjectController {
     @PutMapping("/modify")
     public List<Subject> modify(@RequestBody String name) {
         Subject subject = subjectService.findByName(name);
-        subject.modifySubject("교수1","과목명","과제명", LocalDateTime.now(),LocalDateTime.now());
+        subject.modifySubject("교수명","과목명","과제명", LocalDateTime.now(),LocalDateTime.now());
         return subjectService.findAll();
     }
 
     @PostMapping("/add")
     public List<Subject> add(@RequestBody SubjectDto subjectDto) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        subjectService.join(new Subject(subjectDto.getSubProf(), subjectDto.getSubName(), subjectDto.getSubTitle(), LocalDateTime.parse(subjectDto.getSubStart(), dateTimeFormatter), LocalDateTime.parse(subjectDto.getSubEnd(), dateTimeFormatter)));
+        subjectService.join(
+                new Subject(subjectDto.getSubProf(), subjectDto.getSubName(), subjectDto.getSubTitle(),
+                        LocalDateTime.parse(subjectDto.getSubStart(), dateTimeFormatter),
+                        LocalDateTime.parse(subjectDto.getSubEnd(), dateTimeFormatter))
+        );
         return subjectService.findAll();
     }
 

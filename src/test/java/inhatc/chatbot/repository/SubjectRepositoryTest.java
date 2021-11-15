@@ -21,16 +21,6 @@ class SubjectRepositoryTest {
     @Autowired
     private SubjectService subjectService;
 
-    @AfterEach
-    void afterEach() {
-        subjectService.clear();
-    }
-
-    @BeforeEach
-    void beforeEach() {
-        subjectService.clear();
-    }
-
     @Test
     @DisplayName("과제등록")
     @Transactional
@@ -84,12 +74,8 @@ class SubjectRepositoryTest {
         Subject subject1 = subjectService.findByName("시스템분석설");
         //when
         subjectService.updateSubject("시스템분석설", "윤경섭", "시스템분석설계", "11주차과제",LocalDateTime.of(2021, 11, 8, 0, 0), LocalDateTime.of(2021, 11, 22, 23, 59));
-        List<Subject> subjects = subjectService.findAll();
-        for (Subject subject2 : subjects) {
-            System.out.println("subject2 = " + subject2.getId());
-        }
+
         //then
-//        assertThat(subject1.getId()).isEqualTo(1L);
-//        assertThat(subject1.getSubProf()).isEqualTo("윤경섭");
+        assertThat(subject1.getSubProf()).isEqualTo("윤경섭");
     }
 }
