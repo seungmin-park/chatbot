@@ -13,12 +13,14 @@ class CrawlingWebTest {
     @DisplayName("크롤링테스트")
     void 크롤링테스트() throws Exception {
         //given
-        CrawlingWeb crawlingWeb = new CrawlingWeb();
-        //when
-        Elements elements = crawlingWeb.crawl();
-        //then
-        for (Element element : elements) {
-            System.out.println("element = " + element);
-        }
+//        CrawlingWeb crawlingWeb = new CrawlingWeb();
+//        //when
+//        Elements elements = crawlingWeb.crawl();
+//        //then
+//        for (Element element : elements) {
+//            System.out.println("element = " + element);
+//        }
+        SeleniumExample seleniumExample = new SeleniumExample();
+        seleniumExample.ttt();
     }
 }
