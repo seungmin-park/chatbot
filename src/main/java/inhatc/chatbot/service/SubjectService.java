@@ -16,8 +16,22 @@ public class SubjectService {
 
     private final SubjectRepository subjectRepository;
 
+    private int validateDuplicateSubject(Subject subject) {
+        List<Subject> subjects = subjectRepository.findAll();
+        for (Subject subject1 : subjects) {
+            if (subject.getSubTitle().equals(subject1.getSubTitle()) && subject.getSubProf().equals(subject1.getSubProf())) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+
     @Transactional
     public Long join(Subject subject) {
+        int validation = validateDuplicateSubject(subject);
+        if (validation == -1) {
+            return -1L;
+        }
         return subjectRepository.save(subject);
     }
 

@@ -26,6 +26,7 @@ public class SchedulingExample {
                 subjectService.deleteByName(subject.getSubName());
             }
         }
+        subjects = subjectService.findAll();
         for (Subject subject : subjects) {
             log.info("id = {}",subject.getId());
             log.info("pof = {}",subject.getSubProf());
