@@ -38,12 +38,6 @@ public class SubjectController {
     @GetMapping("/list")
     public List<Subject> list() {
         seleniumCrawling.subjectCrawling();
-        List<Subject> subjects = subjectService.findAll();
-        for (Subject subject : subjects) {
-            if (subject.getRemainDay() < 0) {
-                subjectService.deleteByName(subject.getSubName());
-            }
-        }
         return subjectService.findAll();
     }
 
