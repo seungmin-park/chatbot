@@ -57,11 +57,11 @@ public class Subject {
     @Override
     public String toString() {
         return
-                "교수명'" + subProf + '\'' +
-                "\n, 과목명'" + subName + '\'' +
-                "\n, 과제명'" + subTitle + '\'' +
-                "\n, 과제 시작일 " + subStart +
-                "\n, 과제 마감일 " + subEnd +
-                "\n, 남은 기간 " + remainDay +"일";
+                "교수명 : " + subProf +
+                "\n과목명 : " + subName +
+                "\n과제명 : " + subTitle +
+                "\n과제 시작일 : " + subStart +
+                "\n과제 마감일 : " + subEnd +
+                "\n남은 기간 : " + remainDay +"일";
     }
 }
