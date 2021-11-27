@@ -41,4 +41,8 @@ public class SubjectRepository {
     public void clear() {
         em.clear();
     }
+
+    public Subject findById(Long id) {
+        return em.find(Subject.class, id);
+    }
 }

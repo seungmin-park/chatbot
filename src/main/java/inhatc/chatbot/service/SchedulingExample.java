@@ -17,7 +17,7 @@ public class SchedulingExample {
     private final SeleniumCrawling seleniumCrawling;
     private final SubjectService subjectService;
 
-    @Scheduled(cron = "30 * * * * *")
+    @Scheduled(fixedDelay = 6*1000*60*60)
     public void testMethod() {
         seleniumCrawling.subjectCrawling();
         List<Subject> subjects = subjectService.findAll();

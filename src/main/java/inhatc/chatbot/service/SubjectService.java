@@ -60,4 +60,8 @@ public class SubjectService {
     public void clear() {
         subjectRepository.clear();
     }
+
+    public Subject findById(Long id) {
+        return subjectRepository.findById(id);
+    }
 }

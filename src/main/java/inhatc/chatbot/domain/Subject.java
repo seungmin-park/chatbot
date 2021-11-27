@@ -2,7 +2,6 @@ package inhatc.chatbot.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -10,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 @Getter
@@ -54,5 +52,16 @@ public class Subject {
         this.subStart = subStart;
         this.subEnd = subEnd;
         this.remainDay = ChronoUnit.DAYS.between(LocalDateTime.now(), subEnd);
+    }
+
+    @Override
+    public String toString() {
+        return
+                "교수명'" + subProf + '\'' +
+                "\n, 과목명'" + subName + '\'' +
+                "\n, 과제명'" + subTitle + '\'' +
+                "\n, 과제 시작일 " + subStart +
+                "\n, 과제 마감일 " + subEnd +
+                "\n, 남은 기간 " + remainDay +"일";
     }
 }
