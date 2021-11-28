@@ -64,4 +64,9 @@ public class SubjectService {
     public Subject findById(Long id) {
         return subjectRepository.findById(id);
     }
+
+    @Transactional
+    public void updateRemainDay(Subject subject) {
+        subjectRepository.updateRemainDay(subject);
+    }
 }

@@ -17,11 +17,12 @@ public class SchedulingExample {
     private final SeleniumCrawling seleniumCrawling;
     private final SubjectService subjectService;
 
-    @Scheduled(fixedDelay = 6*1000*60*60)
+    @Scheduled(fixedDelay = 1000*60*60)
     public void testMethod() {
         seleniumCrawling.subjectCrawling();
         List<Subject> subjects = subjectService.findAll();
         for (Subject subject : subjects) {
+            subjectService.updateRemainDay(subject);
             if (subject.getRemainDay() < 0) {
                 subjectService.deleteByName(subject.getSubName());
             }

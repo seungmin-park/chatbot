@@ -19,6 +19,11 @@ public class SubjectRepository {
         return subject.getId();
     }
 
+    public void updateRemainDay(Subject subject) {
+        Subject subjectById = findById(subject.getId());
+        subjectById.updateRemainDate();
+    }
+
     public List<Subject> findAll() {
         //select * from subject;
         return em.createQuery("select s from Subject s", Subject.class).getResultList();

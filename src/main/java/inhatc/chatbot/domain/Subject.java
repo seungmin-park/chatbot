@@ -45,6 +45,10 @@ public class Subject {
         this.remainDay = ChronoUnit.DAYS.between(subStart, subEnd);
     }
 
+    public void updateRemainDate() {
+        this.remainDay = ChronoUnit.DAYS.between(LocalDateTime.now(), subEnd);
+    }
+
     public Subject(String subProf, String subName, String subTitle, LocalDateTime subStart, LocalDateTime subEnd) {
         this.subProf = subProf;
         this.subName = subName;
