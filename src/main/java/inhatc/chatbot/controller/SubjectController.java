@@ -1,10 +1,7 @@
 package inhatc.chatbot.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import inhatc.chatbot.domain.SeleniumCrawling;
 import inhatc.chatbot.domain.Subject;
-import inhatc.chatbot.domain.SubjectDto;
 import inhatc.chatbot.service.SubjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,21 +23,6 @@ import java.util.Map;
 public class SubjectController {
 
     private final SubjectService subjectService;
-    private final SeleniumCrawling seleniumCrawling;
-
-    @PostConstruct
-    public void add() {
-        subjectService.join(
-                new Subject("윤경섭", "시스템분석설계", "11주차과제",
-                        LocalDateTime.of(2021, 11, 8, 0, 0),
-                        LocalDateTime.of(2021, 11, 23, 23, 59))
-        );
-        subjectService.join(
-                new Subject("김태간", "오픈소스프로그래밍", "11주차과제",
-                LocalDateTime.of(2021, 11, 8, 0, 0),
-                LocalDateTime.of(2021, 11, 15, 23, 59))
-        );
-    }
 
     @GetMapping("/")
     public String hello() {
@@ -69,11 +51,6 @@ public class SubjectController {
         return resultJson;
     }
 
-    @PostMapping("/list")
-    public Map<String, String> list(@RequestParam Map<String, String> params) {
-        return params;
-    }
-
     @PutMapping("/modify")
     public List<Subject> modify(@RequestBody String name) {
         Subject subject = subjectService.findByName(name);
@@ -82,7 +59,7 @@ public class SubjectController {
     }
 
     //과제 추가
-    @PostMapping(value = "/add", headers = {"Accept=application/json"})
+    @PostMapping(value = "/subject/add", headers = {"Accept=application/json"})
     public HashMap add(@RequestBody Map<String, Object> params) {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -114,7 +91,7 @@ public class SubjectController {
             text.put("text", findByIdSubject.toString());
 
         } catch (Exception e) {
-            text.put("text", e.toString());
+            text.put("text", e.getMessage());
         }
         finally {
 
