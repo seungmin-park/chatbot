@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
@@ -37,14 +36,24 @@ public class SubjectController {
         List<Subject> subjects = subjectService.findAll();
         List<HashMap<String,Object>> outputs = new ArrayList<>();
         HashMap<String,Object> template = new HashMap<>();
-        for (Subject subject : subjects) {
+        if (subjects.size() == 0) {
             HashMap<String, Object> simpleText = new HashMap<>();
             HashMap<String, Object> text = new HashMap<>();
-            text.put("text",subject.toString());
+            text.put("text","현재 진형중인 과제가 없습니다.");
             simpleText.put("simpleText",text);
             outputs.add(simpleText);
             template.put("outputs",outputs);
+        } else {
+            for (Subject subject : subjects) {
+                HashMap<String, Object> simpleText = new HashMap<>();
+                HashMap<String, Object> text = new HashMap<>();
+                text.put("text",subject.toString());
+                simpleText.put("simpleText",text);
+                outputs.add(simpleText);
+                template.put("outputs",outputs);
+            }
         }
+
 
         resultJson.put("version","2.0");
         resultJson.put("template",template);
@@ -91,7 +100,7 @@ public class SubjectController {
             text.put("text", findByIdSubject.toString());
 
         } catch (Exception e) {
-            text.put("text", e.getMessage());
+            text.put("text", "잘못된 정보가 들어왔습니다.");
         }
         finally {
 
@@ -102,7 +111,6 @@ public class SubjectController {
             resultJson.put("version", "2.0");
             resultJson.put("template", template);
         }
-
         return resultJson;
     }
 

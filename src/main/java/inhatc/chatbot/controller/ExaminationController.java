@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -53,7 +52,6 @@ public class ExaminationController {
 
     @PostMapping(value = "/exam/add", headers = {"Accept=application/json"})
     public HashMap add(@RequestBody Map<String, Object> params) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         HashMap<String, Object> resultJson = new HashMap<>();
         List<HashMap<String, Object>> outputs = new ArrayList<>();
@@ -71,7 +69,7 @@ public class ExaminationController {
             String subName = values[0];
             String subProf = values[1];
             String subMethod = values[2];
-            LocalDateTime subStart = LocalDateTime.parse(values[3], dateTimeFormatter);
+            String subStart = values[3];
             String subLoc = values[4];
 
             Examination examination = new Examination(subName, subProf, subMethod, subStart, subLoc);
@@ -81,7 +79,7 @@ public class ExaminationController {
             text.put("text", examination.toString());
 
         } catch (Exception e) {
-            text.put("text", e.toString());
+            text.put("text", "잘못된 정보가 들어왔습니다.");
         }
         finally {
 

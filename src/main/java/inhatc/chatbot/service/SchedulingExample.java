@@ -17,9 +17,8 @@ public class SchedulingExample {
     private final SeleniumCrawling seleniumCrawling;
     private final SubjectService subjectService;
 
-    @Scheduled(fixedDelay = 1000*60*60)
+    @Scheduled(fixedDelay = 1000*60*10)
     public void testMethod() {
-        seleniumCrawling.subjectCrawling();
         List<Subject> subjects = subjectService.findAll();
         for (Subject subject : subjects) {
             subjectService.updateRemainDay(subject);
@@ -27,6 +26,7 @@ public class SchedulingExample {
                 subjectService.deleteByName(subject.getSubName());
             }
         }
+        seleniumCrawling.subjectCrawling();
         subjects = subjectService.findAll();
         for (Subject subject : subjects) {
             log.info("id = {}",subject.getId());

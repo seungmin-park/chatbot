@@ -21,10 +21,10 @@ public class Examination {
 
     private String method;
 
-    private LocalDateTime subDate;
+    private String subDate;
     private String subLoc;
 
-    public Examination(String subName, String subProf, String method, LocalDateTime subDate, String subLoc) {
+    public Examination(String subName, String subProf, String method, String subDate, String subLoc) {
         this.subName = subName;
         this.subProf = subProf;
         this.method = method;
