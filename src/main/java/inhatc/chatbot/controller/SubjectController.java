@@ -2,11 +2,16 @@ package inhatc.chatbot.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import inhatc.chatbot.domain.Subject;
+import inhatc.chatbot.domain.response.Output;
+import inhatc.chatbot.domain.response.SimpleText;
+import inhatc.chatbot.domain.response.Template;
+import inhatc.chatbot.domain.response.UserSubjectResponse;
 import inhatc.chatbot.service.SubjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
@@ -21,6 +26,25 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class SubjectController {
 
+    @PostConstruct
+    public void init() {
+        subjectService.join(
+                new Subject("김태간", "오픈소스프로그래밍", "11주차과제",
+                        LocalDateTime.of(2022, 02, 8, 0, 0),
+                        LocalDateTime.of(2022, 02, 27, 23, 59))
+        );
+        subjectService.join(
+                new Subject("김태간1", "오픈소스프로그래밍1", "11주차과제1",
+                        LocalDateTime.of(2022, 02, 8, 0, 0),
+                        LocalDateTime.of(2022, 02, 27, 23, 59))
+        );
+        subjectService.join(
+                new Subject("김태간12", "오픈소스프로그래밍12", "11주차과제12",
+                        LocalDateTime.of(2022, 02, 8, 0, 0),
+                        LocalDateTime.of(2022, 02, 27, 23, 59))
+        );
+    }
+
     private final SubjectService subjectService;
 
     @GetMapping("/")
@@ -29,35 +53,23 @@ public class SubjectController {
     }
 
     //과제 확인
-    @PostMapping(value = "/subject/list", headers = {"Accept=application/json"})
-    public HashMap subjects(@RequestParam Map<String, String> params) {
-        HashMap<String, Object> resultJson = new HashMap<>();
+    @PostMapping(value = "/subject/list")
+    public UserSubjectResponse subjects() {
+        UserSubjectResponse userSubjectResponse = new UserSubjectResponse();
 
         List<Subject> subjects = subjectService.findAll();
-        List<HashMap<String,Object>> outputs = new ArrayList<>();
-        HashMap<String,Object> template = new HashMap<>();
+        Template template = new Template();
+        List<Output> outputs = template.getOutputs();
         if (subjects.size() == 0) {
-            HashMap<String, Object> simpleText = new HashMap<>();
-            HashMap<String, Object> text = new HashMap<>();
-            text.put("text","현재 진형중인 과제가 없습니다.");
-            simpleText.put("simpleText",text);
-            outputs.add(simpleText);
-            template.put("outputs",outputs);
+            outputs.add(new Output(new SimpleText("현재 진행중인 과제가 없습니다.")));
         } else {
             for (Subject subject : subjects) {
-                HashMap<String, Object> simpleText = new HashMap<>();
-                HashMap<String, Object> text = new HashMap<>();
-                text.put("text",subject.toString());
-                simpleText.put("simpleText",text);
-                outputs.add(simpleText);
-                template.put("outputs",outputs);
+                outputs.add(new Output(new SimpleText(subject.toString())));
             }
         }
+        userSubjectResponse.setTemplate(template);
 
-
-        resultJson.put("version","2.0");
-        resultJson.put("template",template);
-        return resultJson;
+        return userSubjectResponse;
     }
 
     @PutMapping("/modify")

@@ -2,17 +2,16 @@
 
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://chatbot.cd8sxqbmbhkt.ap-northeast-2.rds.amazonaws.com:3306/chatbot?serverTimezone=UTC&characterEncoding=UTF-8
-    username: inhatc
-    password: inhatc
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/jpashop
+    username: sa
+    password:
 
   jpa:
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: true
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
 
   mvc:
     hiddenmethod:
