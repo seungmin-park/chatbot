@@ -11,39 +11,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public class SubjectController {
-
-    @PostConstruct
-    public void init() {
-        subjectService.join(
-                new Subject("김태간", "오픈소스프로그래밍", "11주차과제",
-                        LocalDateTime.of(2022, 02, 8, 0, 0),
-                        LocalDateTime.of(2022, 02, 27, 23, 59))
-        );
-        subjectService.join(
-                new Subject("김태간1", "오픈소스프로그래밍1", "11주차과제1",
-                        LocalDateTime.of(2022, 02, 8, 0, 0),
-                        LocalDateTime.of(2022, 02, 27, 23, 59))
-        );
-        subjectService.join(
-                new Subject("김태간12", "오픈소스프로그래밍12", "11주차과제12",
-                        LocalDateTime.of(2022, 02, 8, 0, 0),
-                        LocalDateTime.of(2022, 02, 27, 23, 59))
-        );
-    }
 
     private final SubjectService subjectService;
 
@@ -54,46 +31,38 @@ public class SubjectController {
 
     //과제 확인
     @PostMapping(value = "/subject/list")
-    public UserSubjectResponse subjects() {
-        UserSubjectResponse userSubjectResponse = new UserSubjectResponse();
+    public Object subjects() {
 
         List<Subject> subjects = subjectService.findAll();
         Template template = new Template();
-        List<Output> outputs = template.getOutputs();
         if (subjects.size() == 0) {
-            outputs.add(new Output(new SimpleText("현재 진행중인 과제가 없습니다.")));
+            template.getOutputs().add(new Output(new SimpleText("현재 진행중인 과제가 없습니다.")));
         } else {
             for (Subject subject : subjects) {
-                outputs.add(new Output(new SimpleText(subject.toString())));
+                template.getOutputs().add(new Output(new SimpleText(subject.toString())));
             }
         }
-        userSubjectResponse.setTemplate(template);
 
-        return userSubjectResponse;
+        return new UserSubjectResponse(template);
     }
 
     @PutMapping("/modify")
     public List<Subject> modify(@RequestBody String name) {
-        Subject subject = subjectService.findByName(name);
+        Subject subject = subjectService.findBySubName(name);
         subject.modifySubject("교수명","과목명","과제명", LocalDateTime.now(),LocalDateTime.now());
         return subjectService.findAll();
     }
 
     //과제 추가
-    @PostMapping(value = "/subject/add", headers = {"Accept=application/json"})
-    public HashMap add(@RequestBody Map<String, Object> params) {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-        HashMap<String, Object> resultJson = new HashMap<>();
-        List<HashMap<String, Object>> outputs = new ArrayList<>();
-        HashMap<String, Object> template = new HashMap<>();
-        HashMap<String, Object> simpleText = new HashMap<>();
-        HashMap<String, Object> text = new HashMap<>();
+    @PostMapping(value = "/subject/add")
+    public UserSubjectResponse add(@RequestBody Map<String, Object> params) {
 
         HashMap action = (HashMap) params.get("action");
         HashMap actionParams = (HashMap) action.get("params");
         String addSubject = (String) actionParams.get("subject");
 
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        Template template = new Template();
         try {
             String[] values = addSubject.split(",");
 
@@ -104,34 +73,20 @@ public class SubjectController {
             LocalDateTime subEnd = LocalDateTime.parse(values[4], dateTimeFormatter);
 
             Subject subject = new Subject(subProf, subName, subTitle, subStart, subEnd);
+            subjectService.join(subject);
 
-            Long join = subjectService.join(subject);
 
-            Subject findByIdSubject = subjectService.findById(join);
-
-            text.put("text", findByIdSubject.toString());
+            template.getOutputs().add(new Output(new SimpleText(subject.toString())));
 
         } catch (Exception e) {
-            text.put("text", "잘못된 정보가 들어왔습니다.");
+            template.getOutputs().add(new Output(new SimpleText("잘못된 정보가 들어왔습니다.")));
         }
         finally {
 
-            simpleText.put("simpleText", text);
-            outputs.add(simpleText);
-            template.put("outputs", outputs);
-
-            resultJson.put("version", "2.0");
-            resultJson.put("template", template);
+            return new UserSubjectResponse(template);
         }
-        return resultJson;
     }
 
-    @DeleteMapping("delete")
-    public List<Subject> delete(@RequestParam String name) {
-        subjectService.deleteByName(name);
-        List<Subject> subjects = subjectService.findAll();
-        return subjects;
-    }
 
     @RequestMapping(value = "/kkoChat/v1" , method= {RequestMethod.POST , RequestMethod.GET },headers = {"Accept=application/json"})
     public String callAPI(@RequestBody Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) {
