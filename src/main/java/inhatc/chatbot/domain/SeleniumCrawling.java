@@ -13,7 +13,8 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.stereotype.Service;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,19 +22,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Service
+@Component
 @RequiredArgsConstructor
 public class SeleniumCrawling {
 
     private WebDriver webDriver;
     private final SubjectService subjectService;
 
+    @Scheduled(fixedDelay = 1000*60*10)
     public void subjectCrawling() {
         //크롤링시 과제 기간 String을 LocalDataTime으로 변환하기 위한 DateTimeFormatter
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        System.setProperty("webdriver.chrome.driver", "C:/repo/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "C:/repo/chromedriver.exe");
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("headless");
+//        chromeOptions.addArguments("headless");
         chromeOptions.addArguments("no-sandbox");
         webDriver = new ChromeDriver(chromeOptions);
         try {
@@ -52,16 +54,15 @@ public class SeleniumCrawling {
             //메인 페이지 이동
             webDriver.switchTo().window(main);
             //홈페이지 내부 팝업 창 닫기
-            webDriver.findElement(By.cssSelector("body > div.ui-dialog.ui-widget.ui-widget-content.ui-corner-all.ui-front.ui-draggable > div.ui-dialog-titlebar.ui-widget-header.ui-corner-all.ui-helper-clearfix.ui-draggable-handle > button")).click();
             webDriver.findElement(By.cssSelector("#imagePop > div.inner-box > div.head-box > a:nth-child(1)")).click();
 
             //아이디와 비밀번호 입력하기
             WebElement id = webDriver.findElement(By.cssSelector("#id"));
             id.clear();
-            id.sendKeys("201844050");
+            id.sendKeys("id");
             WebElement pw = webDriver.findElement(By.cssSelector("#pw"));
             pw.clear();
-            pw.sendKeys("ddd1648215");
+            pw.sendKeys("password");
 
             //로그인 버튼 클릭
             WebElement loginBtn = webDriver.findElement(By.cssSelector("#loginForm > fieldset > p > a"));
